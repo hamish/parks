@@ -1,0 +1,62 @@
+<html>
+<head>
+    <title>Parks: {{loc.name}}</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+    <script type="text/javascript">
+        function initialize() {
+            var latlng = new google.maps.LatLng( {{loc.location.lat}}, {{loc.location.lon}});
+            var myOptions = {
+            zoom: 15,
+            center: latlng,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+
+            var marker = new google.maps.Marker({
+              position: latlng,
+              title:"{{loc.name}}"
+            });
+
+            // To add the marker to the map, call setMap();
+            marker.setMap(map);
+
+            var contentString = '<b>Name:</b> <a href="/p/{{loc.key.id}}/">{{loc.name}}</a><br/>' +
+                  '<b>latlng:</b>{{loc.location.lat}},{{loc.location.lon}}<br>';
+
+            var infowindow = new google.maps.InfoWindow({
+              content: contentString
+            });
+            google.maps.event.addListener(marker, 'click', function() {
+              infowindow.open(map,marker);
+            });
+        }
+
+    </script>
+
+</head>
+<body onload="initialize()">
+    <h1>{{loc.name}}</h1>
+
+<p> Address: {{loc.address}} </p>
+<p> Coordinates:
+        {{loc.location.lat}}
+        {{loc.location.lon}}
+    </p>
+    <p>
+  <div id="map_canvas" style="width:500; height:500"></div>
+
+    </p>
+
+
+    <p>
+        Nearby:<br />
+        {% for near in nearby %} {% ifnotequal loc.key.id near.key.id %}
+        <a href="/p/{{near.key.id}}/">{{near.name}}<a/><br />
+        
+        {% endifnotequal %} {% endfor %}
+    </p>
+<hr />
+<a href="/">Home</a> <a href="/_ah/admin/">admin</a> <a href="/parks.kml">parks.kml</a>
+</body>
+</html>

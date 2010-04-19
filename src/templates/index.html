@@ -1,0 +1,33 @@
+<html>
+<head>
+    <title>Parks</title>
+</head>
+<body>
+<table>
+    <tr>
+        <td>Name</td>
+        <td>Lat</td>
+        <td>Lon</td>
+        <td></td>
+    </tr>
+    <tr>
+        <form action="/new">
+            <td><input type="text" name="name" /></td>
+            <td><input type="text" name="lat" /></td>
+            <td><input type="text" name="lon" /></td>
+            <td><input type="submit" /></td>
+        </form>
+    </tr>
+    {% for loc in locations %}
+    <tr>
+        <td><a href="/p/{{loc.key.id}}/">{{loc.name}}</a></td>
+        <td>{{loc.location.lat}}</td>
+        <td>{{loc.location.lon}}</td>
+        <td></td>
+    </tr>
+    {% endfor %}
+</table>
+<hr />
+<a href="/">Home</a> <a href="/_ah/admin/">admin</a> <a href="/parks.kml">parks.kml</a>
+</body>
+</html>

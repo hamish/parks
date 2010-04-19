@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+      {% for loc in locations %}
+      <Placemark>
+        <name>{{loc.name}}</name>
+        <description>
+            Hi there
+        </description>
+        <Point>
+          <coordinates>{{loc.location.lat}},{{loc.location.lon}}</coordinates>
+        </Point>
+      </Placemark>
+      {% endfor %}
+
+  </Document>
+</kml>
