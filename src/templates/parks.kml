@@ -8,7 +8,7 @@
             Hi there
         </description>
         <Point>
-          <coordinates>{{loc.location.lat}},{{loc.location.lon}}</coordinates>
+          <coordinates>{{loc.location.lon}},{{loc.location.lat}}</coordinates>
         </Point>
       </Placemark>
       {% endfor %}
