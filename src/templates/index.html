@@ -1,8 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 <html>
 <head>
     <title>Parks</title>
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>    
+    <script type="text/javascript" src="/static/js/FrontPage.js"></script>
+    <script type="text/javascript">
+    	function loadPage() {
+    		initialize();
+    	}
+    </script>
 </head>
-<body>
+  <body onload="loadPage()"  >
+	<div id="map_canvas" style="margin-right: 10px; float: left; width: 500px; height: 400px;" ></div>
+  
+
 <table>
     <tr>
         <td>Name</td>
@@ -32,6 +46,7 @@
 <a href="/r/region.html">Regions</a>
 <a href="/_ah/admin/">admin</a> 
 <a href="/parks.kml">parks.kml</a>
+<a href="/parks.json">parks.json</a>
 <a href="/sitemap.xml">sitemap.xml</a>
 <hr />
 <a href="/new?name=Gilbert%20Park&lat=-27.449177&lon=152.997479">Gilbert Park</a> 
@@ -41,6 +56,8 @@
 <a href="/new?name=Toomba%20Ave%20Park&lat=-27.438003&lon=152.99748">Toomba Ave Park</a>
 <a href="/new?name=Ashgrove%20Park&lat=-27.439268&lon=152.985641">Ashgrove Park</a>
 <a href="/new?name=Ashgrove%20Park%202&lat=-27.4396&lon=152.987612">Ashgrove Park 2</a>
+
+<a href="/new?name=Parkland%20Newmarket%20Retirement%20Village%20Park&lat=-27.444239&lon=153.002434">Parkland Newmarket Retirement Village Park</a> 
 
 </body>
 </html>

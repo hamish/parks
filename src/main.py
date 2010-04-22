@@ -14,6 +14,10 @@ from google.appengine.ext import db
 from geo.geomodel import GeoModel
 from geo import geotypes
 
+class Region(db.Model):
+    name=db.StringProperty
+    parentRegion=db.StringProperty()
+    
 class Location(GeoModel):
     name = db.StringProperty()
     address=db.StringProperty()
@@ -30,7 +34,17 @@ class Location(GeoModel):
     
     creationDate = db.DateTimeProperty(auto_now_add=True)
     modificationDate = db.DateTimeProperty(auto_now=True)
-
+    @staticmethod
+    def public_attributes():
+      """Returns a set of simple attributes on location entities."""
+      return [
+        'name', 'address', 'country', 
+        'administrative_area_level_1',
+        'administrative_area_level_2',
+        'administrative_area_level_3',
+        'locality', 'postal_code', 
+        'street_number', 'route',
+      ]
 class WebRequest(webapp.RequestHandler):
     def post(self):
         self.get()
@@ -107,7 +121,7 @@ class ListingPage(TemplatePage):
         self.response.headers['Content-Type'] = contenttype
 
         location_query = Location.all()
-        locations = location_query.fetch(10)
+        locations = location_query.fetch(100)
 
 
         template_values={
@@ -132,12 +146,44 @@ class MainPage(ListingPage):
     def process(self):
         self.showListing('index.html', 'text/html')
 
+
+def _merge_dicts(*args):
+  """Merges dictionaries right to left. Has side effects for each argument."""
+  return reduce(lambda d, s: d.update(s) or d, args)
+
+class JsonList(WebRequest):
+    def process(self):
+        location_query = Location.all()
+        locations = location_query.fetch(100)
+        public_attrs = Location.public_attributes()
+        resultsObj = [
+          _merge_dicts({
+            'lat': loc.location.lat,
+            'lon': loc.location.lon,
+            'key_id' : loc.key().id(),
+            },
+            dict([(attr, getattr(loc, attr))
+                  for attr in public_attrs]))
+          for loc in locations]
+
+        self.response.out.write(simplejson.dumps(
+            {
+            'status': 'success',
+            'results': resultsObj
+            }))
+        
 class RegionPage(TemplatePage):
     def process(self):
         url = self.request.path
         id = int(re.split('/', url)[2])
         location = Location.get_by_id(id)
-    
+        m=re.match(r'/r/(.*?)/?region.html', url)
+        region = m.group(1)
+        name=region
+        if region =='':
+            name="Top"
+        
+   
 class LocationPage(TemplatePage):
     def process(self):
         url = self.request.path
@@ -170,6 +216,7 @@ application = webapp.WSGIApplication(
                     ('/', MainPage),
                     ('/parks.kml', KmlPage),
                     ('/sitemap.xml', Sitemap),
+                    ('/parks.json', JsonList),
 #                    ('/p/[0-9]+/', LocationPage),
                     ('/p/.*/', LocationPage),
                     ('/r/.*', RegionPage),
