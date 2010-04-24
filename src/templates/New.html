@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+    <title>New Park</title>
+</head>
+  <body >
+
+<table>
+    <tr>
+        <td>Name</td>
+        <td>Lat</td>
+        <td>Lon</td>
+        <td></td>
+    </tr>
+    <tr>
+        <form action="/actions/save">
+            <td><input type="text" name="name" /></td>
+            <td><input type="text" name="lat" /></td>
+            <td><input type="text" name="lon" /></td>
+            <td><input type="submit" /></td>
+        </form>
+    </tr>
+    {% for loc in locations %}
+    <tr>
+        <td><a href="/p/{{loc.key.id}}/">{{loc.name}}</a></td>
+        <td>{{loc.location.lat}}</td>
+        <td>{{loc.location.lon}}</td>
+        <td></td>
+    </tr>
+    {% endfor %}
+</table>
+
+<hr />
+<a href="/actions/save?name=Gilbert%20Park&lat=-27.449177&lon=152.997479">Gilbert Park</a> 
+<a href="/actions/save?name=Woolcock%20Park&lat=-27.449467&lon=152.999505">Woolcock Park</a> 
+<a href="/actions/save?name=Tennis%20Ave%20Park&lat=-27.44291&lon=153.001756">Tennis Ave Park</a>
+<a href="/actions/save?name=Quandong%20St%20Park&lat=-27.436335&lon=153.000793">Quandong St Park</a>
+<a href="/actions/save?name=Toomba%20Ave%20Park&lat=-27.438003&lon=152.99748">Toomba Ave Park</a>
+<a href="/actions/save?name=Ashgrove%20Park&lat=-27.439268&lon=152.985641">Ashgrove Park</a>
+<a href="/actions/save?name=Ashgrove%20Park%202&lat=-27.4396&lon=152.987612">Ashgrove Park 2</a>
+<a href="/actions/save?name=Parkland%20Newmarket%20Retirement%20Village%20Park&lat=-27.444239&lon=153.002434">Parkland Newmarket Retirement Village Park</a> 
+{% include "footer.html" %}
+</body>
+</html>

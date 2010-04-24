@@ -16,7 +16,7 @@ from geo import geotypes
 
 class Region(db.Model):
     name=db.StringProperty
-    parentRegion=db.StringProperty()
+    fullPath=db.StringProperty()
     
 class Location(GeoModel):
     name = db.StringProperty()
@@ -69,7 +69,7 @@ class Save(webapp.RequestHandler):
         self.setAddress(location, lat, lon)
 
         location.put()
-        self.redirect('/')
+        self.redirect('/new')
     def setAddress(self, location, lat, lon):
         # Lookup the address
         args = {
@@ -146,6 +146,10 @@ class MainPage(ListingPage):
     def process(self):
         self.showListing('index.html', 'text/html')
 
+class NewPage(ListingPage):
+    def process(self):
+        self.showListing('New.html', 'text/html')
+
 
 def _merge_dicts(*args):
   """Merges dictionaries right to left. Has side effects for each argument."""
@@ -183,7 +187,18 @@ class RegionPage(TemplatePage):
         if region =='':
             name="Top"
         
-   
+        region_query = Region.all()
+        region_puery.filter("name =", name)
+
+        region = region_query.get()
+
+
+        template_values={
+            "locations" : locations,
+            'domain': self.get_domain()
+        }
+        self.writeTemplate(template_values, templateName)
+  
 class LocationPage(TemplatePage):
     def process(self):
         url = self.request.path
@@ -220,7 +235,8 @@ application = webapp.WSGIApplication(
 #                    ('/p/[0-9]+/', LocationPage),
                     ('/p/.*/', LocationPage),
                     ('/r/.*', RegionPage),
-                    ('/new', Save),
+                    ('/new', NewPage),
+                    ('/actions/save', Save),
                 ], debug=True)
 
 def main():

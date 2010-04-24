@@ -16,8 +16,6 @@
     </script>
 </head>
   <body onload="loadPage()"  >
-
-
     <div class="container">
         <div class="nav">
             <h1>My Local Playground</h1>
@@ -29,47 +27,9 @@
         </div>
 
         <div id="map_canvas"  class="content"></div>
+{% include "footer.html" %}
+    </div>  
 
-
-            <table>
-                <tr>
-                    <td>Name</td>
-                    <td>Lat</td>
-                    <td>Lon</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <form action="/new">
-                        <td><input type="text" name="name" /></td>
-                        <td><input type="text" name="lat" /></td>
-                        <td><input type="text" name="lon" /></td>
-                        <td><input type="submit" /></td>
-                    </form>
-                </tr>
-                {% for loc in locations %}
-                <tr>
-                    <td><a href="/p/{{loc.key.id}}/">{{loc.name}}</a></td>
-                    <td>{{loc.location.lat}}</td>
-                    <td>{{loc.location.lon}}</td>
-                    <td></td>
-                </tr>
-                {% endfor %}
-            </table>
-
-
-        </div>
-
-        <div class="footer">
-            <p><em>My Local Playground</em> is being developed by Hamish Currie, with a bit of web design
-               by his lovely wife Kate.</p>
-            <ul>
-                <li><a href="">about us</a></li>
-                <li><a href="">privacy</a></li>
-                <li><a href="">terms</a></li>
-                <li><a href="">site map</a></li>
-            </ul>
-        </div>
-    </div>
 
 
 </body>
