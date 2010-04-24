@@ -55,6 +55,11 @@ class WebRequest(webapp.RequestHandler):
         except:
             self.response.out.write('An error occured:<br/>')
             traceback.print_exc(file=self.response.out)
+    def get_domain(self):
+        domain_url = self.request.url
+        pos = domain_url.find('/', 9) # find the first / after the http:// part
+        domain= domain_url[:pos]
+        return domain
             
 class Save(webapp.RequestHandler):
     def get(self):
@@ -129,11 +134,6 @@ class ListingPage(TemplatePage):
             'domain': self.get_domain()
         }
         self.writeTemplate(template_values, templateName)
-    def get_domain(self):
-        domain_url = self.request.url
-        pos = domain_url.find('/', 9) # find the first / after the http:// part
-        domain= domain_url[:pos]
-        return domain
 class KmlPage(ListingPage):
     def process(self):
         self.showListing('parks.kml', 'application/vnd.google-earth.kml+xml')
@@ -179,8 +179,8 @@ class JsonList(WebRequest):
 class RegionPage(TemplatePage):
     def process(self):
         url = self.request.path
-        id = int(re.split('/', url)[2])
-        location = Location.get_by_id(id)
+        #id = int(re.split('/', url)[2])
+        #location = Location.get_by_id(id)
         m=re.match(r'/r/(.*?)/?region.html', url)
         region = m.group(1)
         name=region
@@ -188,16 +188,16 @@ class RegionPage(TemplatePage):
             name="Top"
         
         region_query = Region.all()
-        region_puery.filter("name =", name)
+        region_query.filter("name =", name)
 
         region = region_query.get()
 
 
         template_values={
-            "locations" : locations,
+            "region" : region,
             'domain': self.get_domain()
         }
-        self.writeTemplate(template_values, templateName)
+        self.writeTemplate(template_values, "Regions.html")
   
 class LocationPage(TemplatePage):
     def process(self):

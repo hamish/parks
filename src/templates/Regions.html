@@ -1,15 +1,32 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 <html>
 <head>
-    <title>Regions</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>My Local Playground - Regions</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css" />
+
 </head>
     <body>
+    <div class="container">
+        <div class="nav">
+            <h1>My Local Playground</h1>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/_ah/admin/">admin</a></li>
+                <li><a href="/parks.kml">parks.kml</a></li>
+            </ul>
+        </div>
+
     	<h1>{{region.name}}</h1>
     	{% for subregion in region.subregions %}
     	{{ subregion.name }}
     	{% endfor %}
-		{% include "footer.html" %}
+        
+        <div class="content"></div>
+
+{% include "footer.html" %}
+    </div>  
+
+
     </body>
 </html>
   
