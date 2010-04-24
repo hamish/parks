@@ -1,0 +1,80 @@
+/** reset css **/
+body {
+    padding: 0; margin: 0; font: 13px Arial, Helvetica, Garuda, sans-serif; font-size: small; font: x-small; }
+h1, h2, h3, h4, h5, h6, ul, li, em, strong, pre, code {
+    padding: 0; margin: 0; line-height: 1em; font-size: 100%; font-weight: normal; font-style: normal; }
+table { font-size: inherit; font: 100%; }
+ul { list-style: none; }
+img { border: 0; }
+p { margin: 1em 0; }
+/** end reset **/
+
+body
+{
+    background: #9fc543 url(/static/images/bg.jpg) repeat-x fixed top left;
+}
+
+div.container
+{
+    background: transparent url(/static/images/tree.jpg) no-repeat fixed top left;
+}
+
+div.nav
+{
+    margin: 0 70px;
+}
+div.nav h1
+{
+    padding: 0.5em 0.5em 0 20%;
+    font-family: cursive;
+    font-size: 4em;
+    font-weight: bold;
+    color: #449FC5;
+}
+div.nav ul
+{
+    float: right;
+    margin: 1em;
+}
+div.nav ul li
+{
+    float: left;
+    margin: 0.5em 1em;
+}
+
+div.content
+{
+    clear: both;
+    margin: 0 70px;
+    padding: 1em;
+    min-height: 300px;
+    background-color: rgba(255, 255, 255, 0.95);
+}
+
+div.footer
+{
+    margin: 0 70px;
+    padding: 0.5em 1em;
+}
+div.footer p
+{
+    float: left;
+    width: 50%;
+    line-height: 1.3em;
+}
+div.footer ul
+{
+    float: right;
+}
+div.footer ul li
+{
+    margin: 0.5em;
+}
+
+/** elements **/
+em
+{
+    font-family: cursive;
+    font-weight: bold;
+    font-size: 1.1em;
+}
