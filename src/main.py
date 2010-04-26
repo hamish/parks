@@ -34,6 +34,10 @@ class Location(GeoModel):
     
     creationDate = db.DateTimeProperty(auto_now_add=True)
     modificationDate = db.DateTimeProperty(auto_now=True)
+    
+    def getUrl(self, hostPrefix):
+        return "%s/p/%d" %(hostPrefix, self.key().id())
+    
     @staticmethod
     def public_attributes():
       """Returns a set of simple attributes on location entities."""
@@ -222,6 +226,7 @@ class LocationPage(TemplatePage):
 
         values={
             'loc':location,
+            'url': location.getUrl(self.get_domain()),
             'nearby':nearby,
         }
         self.writeTemplate(values, "Location.html")

@@ -1,9 +1,17 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html xmlns:og="http://opengraphprotocol.org/schema/">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>My Local Playground - {{loc.name}}</title>
+    <title>My Local Playground - {{loc.name}}</title>    
     <link rel="stylesheet" type="text/css" href="/static/css/style.css" />
+
+    <meta property="og:type" content="landmark" />
+	<meta property="og:title" content="{{loc.name}}" />
+	<meta property="og:url" content="{{url}}/" />
+
+	<meta property="og:latitude" content="{{loc.location.lat}}" />
+	<meta property="og:longitude" content="{{loc.location.lon}}" />
+    
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
     <script type="text/javascript">
@@ -58,6 +66,7 @@
         <div id="map_canvas"  class="content">
 	    	<div id="map_canvas" ></div>
 		</div>
+		<iframe src="http://www.facebook.com/plugins/like.php?href={{ url|urlencode}}&amp;layout=standard&amp;show_faces=true&amp;width=450&amp;action=recommend&amp;colorscheme=light" scrolling="no" frameborder="0" allowTransparency="true" style="border:none; overflow:hidden; width:450px; height:px"></iframe>
 	    	<p>
     	    	Nearby:<br />
         		{% for near in nearby %} {% ifnotequal loc.key.id near.key.id %}
