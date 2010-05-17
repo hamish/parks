@@ -14,8 +14,10 @@ from google.appengine.ext import db
 from geo.geomodel import GeoModel
 from geo import geotypes
 
+class Image(db.Model):
+    content=db.BlobProperty()
 class Region(db.Model):
-    name=db.StringProperty
+    name=db.StringProperty()
     fullPath=db.StringProperty()
     
 class Location(GeoModel):
@@ -65,9 +67,15 @@ class WebRequest(webapp.RequestHandler):
         domain= domain_url[:pos]
         return domain
             
-class Save(webapp.RequestHandler):
-    def get(self):
-        location = Location()
+class Save(WebRequest):
+
+    def process(self):
+        location=Location()
+        locationId=self.request.get('locationId','')
+        try:
+            location=Location.get_by_id(int(locationId))
+        except:
+            pass
         location.name=self.request.get("name")
         lat = float(self.request.get('lat'))
         lon = float(self.request.get('lon'))
@@ -76,9 +84,15 @@ class Save(webapp.RequestHandler):
         location.update_location()
 
         self.setAddress(location, lat, lon)
+        # create image entry
+
 
         location.put()
-        self.redirect('/new')
+        
+        redirectTo=self.request.get('redirectTo','/new')
+
+        self.redirect(redirectTo)
+
     def setAddress(self, location, lat, lon):
         # Lookup the address
         args = {
@@ -87,9 +101,13 @@ class Save(webapp.RequestHandler):
         }
         GEOCODE_BASE_URL = "http://maps.google.com/maps/api/geocode/json"
         url = GEOCODE_BASE_URL + '?' +urllib.urlencode(args)
+        try:
 
-        strResult = urllib2.urlopen(url)
-        result = simplejson.load(strResult)
+            strResult = urllib2.urlopen(url)
+            result = simplejson.load(strResult)
+        except:
+            logging.warn("Unable to download address details")
+            return
         logging.info("JSON Result =" + simplejson.dumps(result))
         status = result['status']
         location.addressStatus = status
@@ -202,11 +220,14 @@ class RegionPage(TemplatePage):
             'domain': self.get_domain()
         }
         self.writeTemplate(template_values, "Regions.html")
-  
+
+
 class LocationPage(TemplatePage):
+    templateName = "Location.html"
+    idIndex=2
     def process(self):
         url = self.request.path
-        id = int(re.split('/', url)[2])
+        id = int(re.split('/', url)[self.idIndex])
         location = Location.get_by_id(id)
 
 
@@ -229,7 +250,45 @@ class LocationPage(TemplatePage):
             'url': location.getUrl(self.get_domain()),
             'nearby':nearby,
         }
-        self.writeTemplate(values, "Location.html")
+        self.writeTemplate(values, self.templateName)
+
+class EditLocationPage(LocationPage):
+    templateName = "EditLocation.html"
+    idIndex=4
+
+#### Pasted code for review only
+class DownloadHandler(LocationPage):
+    def get(self):
+        url = self.request.path
+        match = re.match("/download/(.*)/", url)
+        key=match.groups()[0]
+        logging.debug ("key: %s" % key)
+        payment = db.get(key)
+        product = db.get(payment.product_key)
+        if product.file_content:
+            mimetypes.init()
+            self.response.headers['Content-Type'] = mimetypes.guess_type(product.file_name)[0]
+            self.response.out.write(product.file_content)
+        else:
+            self.error(404)
+    def xpost(self):
+        file_url=self.request.get("file_url")
+        file_name=self.request.get("file_name")
+        content=self.request.get("content")
+        logging.info("upload:" + file_name)
+
+        lower_file_name = file_name.lower()
+        if (lower_file_name.endswith(".mht") or lower_file_name.endswith(".mhtml") ):
+            self.process_mht_file(content, file_url)
+        else:
+            page = self.get_page_for_write(file_url)
+            page.url = file_url
+            page.html = content
+            page.title = "test"
+            page.include_n_sitemap = False
+            page.put()
+########## End pasted code.
+            
 
 application = webapp.WSGIApplication(
                 [
@@ -241,7 +300,8 @@ application = webapp.WSGIApplication(
                     ('/p/.*/', LocationPage),
                     ('/r/.*', RegionPage),
                     ('/new', NewPage),
-                    ('/actions/save', Save),
+                    ('/actions/save/p', Save),
+                    ('/actions/edit/p/.*/',EditLocationPage)
                 ], debug=True)
 
 def main():

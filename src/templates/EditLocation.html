@@ -1,0 +1,18 @@
+<html>
+<head>
+    <title>Edit Location</title>
+</head>
+<body>
+    <h1>Edit Location</h1>
+    <form action="/actions/save/p" enctype="multipart/form-data" method="POST">
+        <input name="locationId" value="{{loc.key.id}}" type="hidden" />
+        <input name="redirectTo" value="/p/{{loc.key.id}}/" type="hidden" />
+        Name: <input name="name" value="{{loc.name}}" type="text" /><br />
+        Lat:<input name="lat" value="{{loc.location.lat}}" type="text" /><br />
+        Lon: <input name="lon" value="{{loc.location.lon}}" type="text" /><br />
+        Add Overview Photo:<input name="overviewPhoto" type="file" ><br />
+        <input name="save" value="save" type="submit"/>
+    </form>
+
+</body>
+</html>
