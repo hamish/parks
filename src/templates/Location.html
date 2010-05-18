@@ -74,6 +74,17 @@
 	    	    {% endifnotequal %} {% endfor %}
     		</p>
         <a href="/actions/edit/p/{{loc.key.id}}/">Edit these details</a>
+
+        <form action="/actions/save/i" enctype="multipart/form-data" method="POST">
+            <input name="locationId" value="{{loc.key.id}}" type="hidden" />
+            <input name="redirectTo" value="/p/{{loc.key.id}}/" type="hidden" />
+            Add Overview Photo:<input name="photo" type="file" >
+            <input name="save" value="save" type="submit"/>
+        </form>
+        {% for pic in loc.picture_set %}
+        <img src="/i/{{pic.key.id}}/" />
+        {% endfor %}
+
 {% include "footer.html" %}
     </div>  
  </body>

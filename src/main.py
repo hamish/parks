@@ -5,6 +5,7 @@ import urllib
 import urllib2
 import simplejson
 import logging
+import mimetypes
 
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
@@ -14,8 +15,6 @@ from google.appengine.ext import db
 from geo.geomodel import GeoModel
 from geo import geotypes
 
-class Image(db.Model):
-    content=db.BlobProperty()
 class Region(db.Model):
     name=db.StringProperty()
     fullPath=db.StringProperty()
@@ -51,6 +50,11 @@ class Location(GeoModel):
         'locality', 'postal_code', 
         'street_number', 'route',
       ]
+class Picture(db.Model):
+    content=db.BlobProperty()
+    location=db.ReferenceProperty(Location)
+    encoding=db.StringProperty()
+
 class WebRequest(webapp.RequestHandler):
     def post(self):
         self.get()
@@ -66,7 +70,34 @@ class WebRequest(webapp.RequestHandler):
         pos = domain_url.find('/', 9) # find the first / after the http:// part
         domain= domain_url[:pos]
         return domain
-            
+
+class SavePicture(WebRequest):
+    def process(self):
+        locationId=self.request.get('locationId','')
+        location=Location.get_by_id(int(locationId))
+        picture = Picture()
+        picture.content=self.request.get('photo')
+
+        filename = self.request.POST["photo"].filename
+        picture.encoding = mimetypes.guess_type(filename)[0]
+
+        picture.location=location.key()
+        picture.put();
+
+        redirectTo=self.request.get('redirectTo','/new')
+        self.redirect(redirectTo)
+
+class PictureHandler(WebRequest):
+    def process(self):
+        url = self.request.path
+        id = int(re.split('/', url)[2])
+        logging.info("picture: %d" %id)
+        picture = Picture.get_by_id(id)
+        logging.info("setting encoding to: %s" % picture.encoding)
+        self.response.headers['Content-Type'] = picture.encoding
+        self.response.out.write(picture.content)
+
+
 class Save(WebRequest):
 
     def process(self):
@@ -298,10 +329,12 @@ application = webapp.WSGIApplication(
                     ('/parks.json', JsonList),
 #                    ('/p/[0-9]+/', LocationPage),
                     ('/p/.*/', LocationPage),
+                    ('/i/.*/', PictureHandler),
                     ('/r/.*', RegionPage),
                     ('/new', NewPage),
                     ('/actions/save/p', Save),
-                    ('/actions/edit/p/.*/',EditLocationPage)
+                    ('/actions/edit/p/.*/',EditLocationPage),
+                    ('/actions/save/i', SavePicture),
                 ], debug=True)
 
 def main():
