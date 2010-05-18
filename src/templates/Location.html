@@ -66,7 +66,6 @@
         <div id="map_canvas"  class="content">
 	    	<div id="map_canvas" ></div>
 		</div>
-		<iframe src="http://www.facebook.com/plugins/like.php?href={{ url|urlencode}}&amp;layout=standard&amp;show_faces=true&amp;width=450&amp;action=recommend&amp;colorscheme=light" scrolling="no" frameborder="0" allowTransparency="true" style="border:none; overflow:hidden; width:450px; height:px"></iframe>
 	    	<p>
     	    	Nearby:<br />
         		{% for near in nearby %} {% ifnotequal loc.key.id near.key.id %}
@@ -84,6 +83,8 @@
         {% for pic in loc.picture_set %}
         <img src="/i/{{pic.key.id}}/" />
         {% endfor %}
+
+        <iframe src="http://www.facebook.com/plugins/like.php?href={{ url|urlencode}}&amp;layout=standard&amp;show_faces=true&amp;width=450&amp;action=recommend&amp;colorscheme=light" scrolling="no" frameborder="0" allowTransparency="true" style="border:none; overflow:hidden; width:450px; height:px"></iframe>
 
 {% include "footer.html" %}
     </div>  
